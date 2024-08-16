@@ -18,7 +18,7 @@
 
      > 每个卷积块中的基本单元是一个卷积层、一个sigmoid激活函数和平均汇聚层
      >
-     > 虽然 ReLU 和最大汇聚层更有效，但它们在20世纪90年代还没有出现
+     > 虽然 ReLU 和最大汇聚层更有效，但它们在 20 世纪 90 年代还没有出现
 
   2. 全连接层密集块：由三个全连接层组成
 
@@ -50,9 +50,8 @@
   for layer in net:
       X = layer(X)
       print(layer.__class__.__name__,'output shape: \t',X.shape)
-  ```
-  
-  ```
+      
+  '''
   Conv2d output shape:         torch.Size([1, 6, 28, 28])
   Sigmoid output shape:        torch.Size([1, 6, 28, 28])
   AvgPool2d output shape:      torch.Size([1, 6, 14, 14])
@@ -65,36 +64,35 @@
   Linear output shape:         torch.Size([1, 84])
   Sigmoid output shape:        torch.Size([1, 84])
   Linear output shape:         torch.Size([1, 10])
+  '''
   ```
   
-  > 卷积层/汇聚层输出尺寸计算公式：设原始输入尺寸为 $(n_h, n_w)$，卷积核尺寸 $(k_h,k_w)$，padding尺寸为 $(p_h,p_w)$，步幅尺寸 $(s_h, s_w)$，卷积输出尺寸为
-  > $$
-  > \left\lfloor\left(n_{h}-k_{h}+p_{h}+s_{h}\right) / s_{h}\right\rfloor \times\left\lfloor\left(n_{w}-k_{w}+p_{w}+s_{w}\right) / s_{w}\right\rfloor .
-  > $$
-  > 验证计算代码
-  >
-  > ```python
-  > def get_output_size(input_size, kernel_size, padding_size, slide_size):
-  >     output_size_h = int((input_size[0]-kernel_size[0] + padding_size[0] + slide_size[0])/slide_size[0])
-  >     output_size_w = int((input_size[1]-kernel_size[1] + padding_size[1] + slide_size[1])/slide_size[1])
-  >     return (output_size_h, output_size_w)
-  > 
-  > # 第一个5x5卷积的输出尺寸
-  > output_size = get_output_size(
-  >     input_size = (28, 28),
-  >     kernel_size = (5, 5), 
-  >     padding_size = (2*2, 2*2),
-  >     slide_size = (1,1)
-  > )
-  > print(output_size)  # (28, 28)
-  > 
-  > # 第一个2x2平均汇聚层的输出尺寸
-  > output_size = get_output_size(
-  >     input_size = (28, 28),
-  >     kernel_size = (2, 2), 
-  >     padding_size = (0, 0),
-  >     slide_size = (2,2)
-  > )
-  > print(output_size)  # (14, 14)
-  > ```
+  卷积层/汇聚层输出尺寸计算公式：设原始输入尺寸为 $(n_h, n_w)$，卷积核尺寸 $(k_h,k_w)$，padding尺寸为 $(p_h,p_w)$，步幅尺寸 $(s_h, s_w)$，输出尺寸为 $\left\lfloor\left(n_{h}-k_{h}+p_{h}+s_{h}\right) / s_{h}\right\rfloor \times\left\lfloor\left(n_{w}-k_{w}+p_{w}+s_{w}\right) / s_{w}\right\rfloor$，验证计算代码
+  
+  ```python
+  def get_output_size(input_size, kernel_size, padding_size, slide_size):
+      output_size_h = int((input_size[0]-kernel_size[0] + padding_size[0] + slide_size[0])/slide_size[0])
+      output_size_w = int((input_size[1]-kernel_size[1] + padding_size[1] + slide_size[1])/slide_size[1])
+      return (output_size_h, output_size_w)
+  
+  # 第一个5x5卷积的输出尺寸
+  output_size = get_output_size(
+   input_size = (28, 28),
+   kernel_size = (5, 5), 
+   padding_size = (2*2, 2*2),
+   slide_size = (1,1)
+  )
+  print(output_size)  # (28, 28)
+  
+  # 第一个2x2平均汇聚层的输出尺寸
+  output_size = get_output_size(
+   input_size = (28, 28),
+   kernel_size = (2, 2), 
+   padding_size = (0, 0),
+   slide_size = (2,2)
+  )
+  print(output_size)  # (14, 14)
+  ```
+  
+  
 

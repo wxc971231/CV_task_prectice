@@ -21,7 +21,7 @@ def build_fashionmnist_dataloader(batch_size, num_workers=0, root=f'{base_path}/
 
     return train_iter, test_iter
 
-def evaluate_accuracy(data_iter, net, device='cuda'):
+def evaluate_accuracy(data_iter, net, device='cpu'):
     predicted_correctness = []
     for X, y in data_iter:
         X = X.to(device)    # (bsz, 1, 28, 28)
@@ -30,7 +30,7 @@ def evaluate_accuracy(data_iter, net, device='cuda'):
         predicted_correctness.extend((y_hat.argmax(dim=1) == y).tolist())
     return np.mean(predicted_correctness)
 
-def train(net, train_iter, test_iter, num_epochs, lr, device='cuda'):
+def train(net, train_iter, test_iter, num_epochs, lr, device='cpu'):
     def init_weights(m):
         if type(m) == nn.Linear or type(m) == nn.Conv2d:
             nn.init.xavier_uniform_(m.weight)
@@ -126,7 +126,8 @@ if __name__ == "__main__":
     train_iter, test_iter = build_fashionmnist_dataloader(batch_size=batch_size)
     
     # 开始训练
-    logs = train(net, train_iter, test_iter, num_epochs, lr, device='cuda')
+    device='cuda' if torch.cuda.is_available() else 'cpu'
+    logs = train(net, train_iter, test_iter, num_epochs, lr, device=device)
 
     # 可视化并保存
     show_log(logs, save_path=f'{base_path}/01_LeNet/train_log.png')
